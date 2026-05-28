@@ -1,11 +1,7 @@
 {
     cmdlines = {
-        [[xmake lua D:\scoop\apps\xmake\current\modules\private\utils\statistics.lua --yes]],
-        "xmake -y -j 10",
-        "xmake run test_digraphx_fast",
-        "xmake -y -j 10",
-        "xmake run test_digraphx_fast",
-        "xmake -y -j 10",
-        "xmake run test_digraphx_fast"
+        [[xmake lua D:\scoop\apps\xmake\current\modules\private\utils\statistics.lua]],
+        "xmake -j 10",
+        "xmake -j 10"
     }
 }
