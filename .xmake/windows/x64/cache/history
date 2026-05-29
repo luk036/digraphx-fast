@@ -1,7 +1,0 @@
-{
-    cmdlines = {
-        [[xmake lua D:\scoop\apps\xmake\current\modules\private\utils\statistics.lua]],
-        "xmake -j 10",
-        "xmake -j 10"
-    }
-}
