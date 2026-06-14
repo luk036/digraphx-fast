@@ -56,8 +56,8 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     DiGraphXFast PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
   )
 elseif(MSVC)
-  target_compile_options(DiGraphXFast PUBLIC /W4 /WX /wd4459 /wd4996)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
+  target_compile_options(DiGraphXFast PUBLIC /W4 /WX /wd5285 /wd4459 /wd4996)
+  # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
 endif()
 
 # Link dependencies
