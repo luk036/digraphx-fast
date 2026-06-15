@@ -16,7 +16,7 @@ include(../cmake/tools.cmake)
 include(../cmake/CPM.cmake)
 include(../cmake/specific.cmake)
 
-CPMAddPackage("gh:doctest/doctest@2.4.11")
+CPMAddPackage("gh:doctest/doctest@2.5.2")
 CPMAddPackage("gh:TheLartians/Format.cmake@1.7.3")
 CPMAddPackage(
   NAME rapidcheck
@@ -62,7 +62,7 @@ if(NOT TEST_INSTALLED_VERSION)
       DiGraphXFast PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
     )
   elseif(MSVC)
-    target_compile_options(DiGraphXFast PUBLIC /utf-8 /W4 /WX /wd5285)
+    target_compile_options(DiGraphXFast PUBLIC /utf-8 /W4 /WX)
     # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
   endif()
 endif()
