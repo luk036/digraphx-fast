@@ -93,7 +93,7 @@ TEST_CASE("Test max_cycles parameter") {
 }
 
 TEST_CASE("Test Large Graph Stress") {
-    constexpr auto V = 1000u;
+    constexpr auto V = 1000U;
     auto builder = CSRGraph<double>::Builder(V);
     // Create a large cycle: 0->1->2->...->999->0
     for (uint32_t i = 0; i < V - 1; ++i) {
