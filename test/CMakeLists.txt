@@ -55,11 +55,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 if(NOT TEST_INSTALLED_VERSION)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(
-      DiGraphXFast PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
+      DiGraphXFast PUBLIC -Wall -Wpedantic -Wextra -Werror
     )
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     target_compile_options(
-      DiGraphXFast PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
+      DiGraphXFast PUBLIC -Wall -Wpedantic -Wextra -Werror
     )
   elseif(MSVC)
     target_compile_options(DiGraphXFast PUBLIC /utf-8 /W4 /WX)
