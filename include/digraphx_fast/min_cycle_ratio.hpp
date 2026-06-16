@@ -1,3 +1,8 @@
+/**
+ * @file min_cycle_ratio.hpp
+ * @brief Minimum cost-to-time cycle ratio solver for CSR graphs
+ */
+
 #pragma once
 
 #include <vector>
@@ -6,7 +11,7 @@
 
 namespace digraphx_fast {
 
-/*!
+/**
  * @brief Minimum cost-to-time cycle ratio
  *
  * Find the cycle with minimum ratio:

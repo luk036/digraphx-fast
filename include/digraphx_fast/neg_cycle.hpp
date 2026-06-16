@@ -1,3 +1,8 @@
+/**
+ * @file neg_cycle.hpp
+ * @brief Howard's policy iteration for negative cycle detection (CSR-optimized)
+ */
+
 #pragma once
 
 #include <algorithm>
@@ -10,7 +15,7 @@
 
 namespace digraphx_fast {
 
-/*!
+/**
  * @brief Howard's policy iteration for negative cycle detection
  *
  * Uses pre-allocated per-node arrays (no hash maps), epoch-based
@@ -37,7 +42,7 @@ template <typename Graph> class NegCycleFinder {
     // Scratch buffer for cycle extraction (reused across calls)
     std::vector<size_t> _cycle;
 
-    /*!
+    /**
      * @brief One relaxation pass over all CSR edges
      *
      * Linear scan of targets/weights arrays — cache-friendly.
@@ -65,7 +70,7 @@ template <typename Graph> class NegCycleFinder {
         return changed;
     }
 
-    /*!
+    /**
      * @brief Find a cycle in the predecessor graph
      *
      * Uses _visited array to track which start-vertex set each entry.
@@ -93,7 +98,7 @@ template <typename Graph> class NegCycleFinder {
         return {};
     }
 
-    /*!
+    /**
      * @brief Verify that the cycle starting at handle is indeed negative
      */
     auto _is_negative(node_t handle, const std::vector<weight_t>& weights,
@@ -109,7 +114,7 @@ template <typename Graph> class NegCycleFinder {
         return false;
     }
 
-    /*!
+    /**
      * @brief Extract cycle edge indices starting from handle
      *
      * Returns reference to internal buffer (avoids allocation per call).
@@ -129,7 +134,7 @@ template <typename Graph> class NegCycleFinder {
         : _graph(graph), _pred_node(graph.num_nodes, node_t(-1)),
           _pred_edge(graph.num_nodes, 0), _visited(graph.num_nodes, 0) {}
 
-    /*!
+    /**
      * @brief Howard's algorithm — find negative cycles with callback
      *
      * @tparam Fn Callable(const std::vector&lt;size_t&gt;&amp;) — receives cycle edge indices
@@ -158,7 +163,7 @@ template <typename Graph> class NegCycleFinder {
         return found > 0;
     }
 
-    /*!
+    /**
      * @brief Warm-start Howard's algorithm
      *
      * Unlike howard(), this does NOT clear the predecessor map,

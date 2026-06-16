@@ -1,3 +1,8 @@
+/**
+ * @file csr_graph.hpp
+ * @brief Compressed Sparse Row directed graph representation
+ */
+
 #pragma once
 
 #include <cassert>
@@ -6,7 +11,7 @@
 
 namespace digraphx_fast {
 
-/*!
+/**
  * @brief Compressed Sparse Row (CSR) directed graph
  *
  * Cache-friendly adjacency storage. All outgoing edges of a node
@@ -29,7 +34,7 @@ template <typename Weight = double> class CSRGraph {
 
     CSRGraph() = default;
 
-    /*!
+    /**
      * @brief Builder pattern for construction
      *
      * Accumulates edges in adjacency list, then compact to CSR.

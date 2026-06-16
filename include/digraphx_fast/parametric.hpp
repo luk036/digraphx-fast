@@ -1,3 +1,8 @@
+/**
+ * @file parametric.hpp
+ * @brief Maximum parametric network problem solver for CSR graphs
+ */
+
 #pragma once
 
 #include <algorithm>
@@ -7,7 +12,7 @@
 
 namespace digraphx_fast {
 
-/*!
+/**
  * @brief Maximum parametric network problem
  *
  * Maximize r such that:
