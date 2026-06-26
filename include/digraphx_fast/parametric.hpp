@@ -16,10 +16,38 @@ namespace digraphx_fast {
  * @brief Maximum parametric network problem
  *
  * Maximize r such that:
- *   dist[v] - dist[u] <= distance(e, r)  for all edges e(u,v)
+ * @f[
+ *     d_v - d_u \le w_r(e), \quad \forall e(u,v) \in E
+ * @f]
  *
  * Uses Howard's algorithm with warm-start — distances and
  * predecessor info persist across iterations for faster convergence.
+ *
+ * @dot
+ *   digraph max_param {
+ *     rankdir=TB; bgcolor="transparent";
+ *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+ *     start [label="n = 0", fillcolor="#a9cce3"];
+ *     weight [label="Compute\nweights[e] =\ndistance(r, e)"];
+ *     branch [label="n == 0?", shape=diamond, fillcolor="#f9e79f"];
+ *     howard [label="howard()\nfresh start"];
+ *     warm [label="howard_warm()\nreuse predecessor"];
+ *     check [label="Negative\ncycle found?", shape=diamond, fillcolor="#f9e79f"];
+ *     update_r [label="Update r_opt\n= min ratio\nupdate dist"];
+ *     next [label="n += 1"];
+ *     done [label="Return\noptimal cycle", fillcolor="#7fb3d8"];
+ *     start -> weight;
+ *     weight -> branch;
+ *     branch -> howard [label="Yes", color="#27ae60"];
+ *     branch -> warm [label="No", color="#e74c3c"];
+ *     howard -> check;
+ *     warm -> check;
+ *     check -> update_r [label="Yes", color="#27ae60"];
+ *     check -> done [label="No", color="#e74c3c"];
+ *     update_r -> next;
+ *     next -> weight [style=dashed, label="iterate", color="#888"];
+ *   }
+ * @enddot
  *
  * @tparam Graph CSR graph type
  * @tparam T Numeric type for parameter r

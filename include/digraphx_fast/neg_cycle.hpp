@@ -43,11 +43,30 @@ template <typename Graph> class NegCycleFinder {
     std::vector<size_t> _cycle;
 
     /**
-     * @brief One relaxation pass over all CSR edges
-     *
-     * Linear scan of targets/weights arrays — cache-friendly.
-     * Updates dist[v] = min(dist[v], dist[u] + w) and records predecessor.
-     */
+      * @brief One relaxation pass over all CSR edges
+      *
+      * @f[
+      *     d_v \gets \min(d_v,\; d_u + w(u,v)), \quad \forall (u,v) \in E
+      * @f]
+      *
+      * @dot
+      *   digraph relax {
+      *     rankdir=LR; bgcolor="transparent";
+      *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+      *     scan [label="For each\nu in V", fillcolor="#a9cce3"];
+      *     edges [label="For each edge\n(u,v) in E"];
+      *     relax [label="d[v] = min(d[v],\nd[u] + w)", shape=diamond, fillcolor="#f9e79f"];
+      *     changed [label="Record\npredecessor\nu -> v", fillcolor="#d5f5e3"];
+      *     scan -> edges;
+      *     edges -> relax;
+      *     relax -> changed [label="improved", color="#27ae60"];
+      *     relax -> edges [style=dashed, label="skip", color="#888"];
+      *   }
+      * @enddot
+      *
+      * Linear scan of targets/weights arrays — cache-friendly.
+      * Updates dist[v] = min(dist[v], dist[u] + w) and records predecessor.
+      */
     auto _relax(std::vector<weight_t>& dist, const std::vector<weight_t>& weights) -> bool {
         bool changed = false;
         const auto& offsets = _graph.offsets;
@@ -137,6 +156,32 @@ template <typename Graph> class NegCycleFinder {
     /**
      * @brief Howard's algorithm — find negative cycles with callback
      *
+     * @f[
+     *     \text{relax } d_v \gets \min(d_v, d_u + w_{uv}) \to \text{ find cycle } \to \text{ verify negativity}
+     * @f]
+     *
+     * @dot
+     *   digraph howard_algo {
+     *     rankdir=TB; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     reset [label="Reset\npredecessor map", fillcolor="#a9cce3"];
+     *     relax [label="Relax all edges\n(one pass)"];
+     *     check_relax [label="Changed?", shape=diamond, fillcolor="#f9e79f"];
+     *     find_cycle [label="Find cycle in\npredecessor graph"];
+     *     check_neg [label="Cycle\nnegative?", shape=diamond, fillcolor="#f9e79f"];
+     *     yield [label="Yield cycle\nvia callback", fillcolor="#d5f5e3"];
+     *     done [label="Return\nfound > 0", fillcolor="#7fb3d8"];
+     *     reset -> relax;
+     *     relax -> check_relax;
+     *     check_relax -> find_cycle [label="Yes", color="#27ae60"];
+     *     check_relax -> done [label="No", color="#e74c3c"];
+     *     find_cycle -> check_neg;
+     *     check_neg -> yield [label="Yes", color="#27ae60"];
+     *     check_neg -> relax [label="No", style=dashed, color="#888"];
+     *     yield -> relax [style=dashed, label="more?", color="#888"];
+     *   }
+     * @enddot
+     *
      * @tparam Fn Callable(const std::vector&lt;size_t&gt;&amp;) — receives cycle edge indices
      * @param[in,out] dist Distance vector (size V), updated during relaxation
      * @param[in] weights Edge weight vector (size E)
@@ -165,6 +210,32 @@ template <typename Graph> class NegCycleFinder {
 
     /**
      * @brief Warm-start Howard's algorithm
+     *
+     * @f[
+     *     \pi^{(0)}(v) \gets \pi^{(\text{prev})}(v), \quad \text{reuse predecessor policy across parametric iterations}
+     * @f]
+     *
+     * @dot
+     *   digraph howard_warm {
+     *     rankdir=TB; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     keep [label="Keep predecessor\nmap from prev call", fillcolor="#a9cce3"];
+     *     relax [label="Relax all edges\n(one pass)"];
+     *     check_relax [label="Changed?", shape=diamond, fillcolor="#f9e79f"];
+     *     find_cycle [label="Find cycle"];
+     *     check_neg [label="Negative?", shape=diamond, fillcolor="#f9e79f"];
+     *     yield [label="Yield cycle", fillcolor="#d5f5e3"];
+     *     done [label="Return\nfound > 0", fillcolor="#7fb3d8"];
+     *     keep -> relax;
+     *     relax -> check_relax;
+     *     check_relax -> find_cycle [label="Yes", color="#27ae60"];
+     *     check_relax -> done [label="No", color="#e74c3c"];
+     *     find_cycle -> check_neg;
+     *     check_neg -> yield [label="Yes", color="#27ae60"];
+     *     check_neg -> relax [label="No", style=dashed, color="#888"];
+     *     yield -> relax [style=dashed, label="more?", color="#888"];
+     *   }
+     * @enddot
      *
      * Unlike howard(), this does NOT clear the predecessor map,
      * allowing reuse from a previous call (e.g., in parametric search

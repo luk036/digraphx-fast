@@ -15,9 +15,27 @@ namespace digraphx_fast {
  * @brief Minimum cost-to-time cycle ratio
  *
  * Find the cycle with minimum ratio:
- *   r = min_C sum(cost(e)) / sum(time(e))
+ * @f[
+ *     r^* = \min_{C \subseteq G} \frac{\sum_{e\in C} \mathrm{cost}(e)}{\sum_{e\in C} \mathrm{time}(e)}
+ * @f]
  *
  * Uses parametric search with Howard's algorithm.
+ *
+ * @dot
+ *   digraph mcr_fast {
+ *     rankdir=LR; bgcolor="transparent";
+ *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+ *     r0 [label="Initial r", fillcolor="#a9cce3"];
+ *     w_func [label="calc_weight =\ncost - r * time"];
+ *     r_func [label="calc_ratio =\ntotal_cost /\ntotal_time"];
+ *     param [label="max_parametric\nsearch", fillcolor="#f9e79f"];
+ *     cycle [label="Optimal\ncycle", fillcolor="#7fb3d8"];
+ *     r0 -> w_func;
+ *     w_func -> param;
+ *     r_func -> param;
+ *     param -> cycle;
+ *   }
+ * @enddot
  *
  * @tparam Graph CSR graph type
  * @tparam T Numeric type (typically double or Fraction)
