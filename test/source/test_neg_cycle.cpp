@@ -2,10 +2,9 @@
 
 #include <algorithm>
 #include <cstdint>
-#include <vector>
-
 #include <digraphx_fast/csr_graph.hpp>
 #include <digraphx_fast/neg_cycle.hpp>
+#include <vector>
 
 using namespace digraphx_fast;
 
@@ -132,10 +131,13 @@ TEST_CASE("Test Warm-Start") {
     // and distances are warm. This should converge faster. Verify the
     // callback is still invoked correctly.
     size_t count = 0;
-    finder.howard_warm(dist, weights, [&](const auto& cycle) {
-        ++count;
-        CHECK_FALSE(cycle.empty());
-    }, 2);
+    finder.howard_warm(
+        dist, weights,
+        [&](const auto& cycle) {
+            ++count;
+            CHECK_FALSE(cycle.empty());
+        },
+        2);
     // Warm-start should find any remaining negative cycles quickly
-    CHECK_GE(count, 0); // no crash, correct callbacks
+    CHECK_GE(count, 0);  // no crash, correct callbacks
 }
