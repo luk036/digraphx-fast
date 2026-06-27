@@ -45,7 +45,6 @@ namespace digraphx_fast {
 template <typename Graph, typename T, typename Fn1, typename Fn2>
 auto min_cycle_ratio(const Graph& gra, T& r0, Fn1&& get_cost, Fn2&& get_time,
                      std::vector<T>& dist, size_t max_iters = 1000) -> std::vector<size_t> {
-
     auto calc_weight = [&](const T& r, size_t e) -> T {
         return static_cast<T>(get_cost(e)) - r * static_cast<T>(get_time(e));
     };
@@ -60,7 +59,8 @@ auto min_cycle_ratio(const Graph& gra, T& r0, Fn1&& get_cost, Fn2&& get_time,
         return total_cost / total_time;
     };
 
-    return max_parametric(gra, r0, std::move(calc_weight), std::move(calc_ratio), dist, max_iters);
+    return max_parametric(gra, r0, std::move(calc_weight), std::move(calc_ratio), dist,
+                          max_iters);
 }
 
-} // namespace digraphx_fast
+}  // namespace digraphx_fast

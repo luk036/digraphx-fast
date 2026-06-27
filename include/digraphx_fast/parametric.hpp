@@ -56,9 +56,7 @@ namespace digraphx_fast {
  */
 template <typename Graph, typename T, typename Fn1, typename Fn2>
 auto max_parametric(const Graph& gra, T& r_opt, Fn1&& distance, Fn2&& zero_cancel,
-                    std::vector<T>& dist, size_t max_iters = 1000)
-    -> std::vector<size_t> {
-
+                    std::vector<T>& dist, size_t max_iters = 1000) -> std::vector<size_t> {
     using weight_t = typename Graph::weight_t;
 
     auto ncf = NegCycleFinder<Graph>(gra);
@@ -76,54 +74,59 @@ auto max_parametric(const Graph& gra, T& r_opt, Fn1&& distance, Fn2&& zero_cance
 
         bool found;
         if (niter == 0) {
-            found = ncf.howard(dist, weights, [&](const auto& cycle) {
-                auto r_min = zero_cancel(cycle, gra);
-                if (r_min < r_opt) {
-                    c_opt = cycle;
-                    r_opt = r_min;
-                    // Update distances along cycle
-                    for (auto e : cycle) {
-                        auto u = 0u;
-                        // Find source node for this edge
-                        // Linear scan over offsets — could be optimized
-                        // with a reverse map but fine for typical cycles
-                        for (size_t i = 0; i < gra.num_nodes; ++i) {
-                            if (e >= gra.offsets[i] && e < gra.offsets[i + 1]) {
-                                u = static_cast<uint32_t>(i);
-                                break;
+            found = ncf.howard(
+                dist, weights,
+                [&](const auto& cycle) {
+                    auto r_min = zero_cancel(cycle, gra);
+                    if (r_min < r_opt) {
+                        c_opt = cycle;
+                        r_opt = r_min;
+                        // Update distances along cycle
+                        for (auto e : cycle) {
+                            auto u = 0u;
+                            // Find source node for this edge
+                            // Linear scan over offsets — could be optimized
+                            // with a reverse map but fine for typical cycles
+                            for (size_t i = 0; i < gra.num_nodes; ++i) {
+                                if (e >= gra.offsets[i] && e < gra.offsets[i + 1]) {
+                                    u = static_cast<uint32_t>(i);
+                                    break;
+                                }
                             }
+                            auto v = gra.targets[e];
+                            dist[u] = dist[v] - static_cast<T>(weights[e]);
                         }
-                        auto v = gra.targets[e];
-                        dist[u] = dist[v] - static_cast<T>(weights[e]);
                     }
-                }
-            }, 1);
+                },
+                1);
         } else {
-            found = ncf.howard_warm(dist, weights, [&](const auto& cycle) {
-                auto r_min = zero_cancel(cycle, gra);
-                if (r_min < r_opt) {
-                    c_opt = cycle;
-                    r_opt = r_min;
-                    for (auto e : cycle) {
-                        auto u = 0u;
-                        for (size_t i = 0; i < gra.num_nodes; ++i) {
-                            if (e >= gra.offsets[i] && e < gra.offsets[i + 1]) {
-                                u = static_cast<uint32_t>(i);
-                                break;
+            found = ncf.howard_warm(
+                dist, weights,
+                [&](const auto& cycle) {
+                    auto r_min = zero_cancel(cycle, gra);
+                    if (r_min < r_opt) {
+                        c_opt = cycle;
+                        r_opt = r_min;
+                        for (auto e : cycle) {
+                            auto u = 0u;
+                            for (size_t i = 0; i < gra.num_nodes; ++i) {
+                                if (e >= gra.offsets[i] && e < gra.offsets[i + 1]) {
+                                    u = static_cast<uint32_t>(i);
+                                    break;
+                                }
                             }
+                            auto v = gra.targets[e];
+                            dist[u] = dist[v] - static_cast<T>(weights[e]);
                         }
-                        auto v = gra.targets[e];
-                        dist[u] = dist[v] - static_cast<T>(weights[e]);
                     }
-                }
-            }, 1);
+                },
+                1);
         }
 
-        if (!found)
-            break;
+        if (!found) break;
     }
 
     return c_opt;
 }
 
-} // namespace digraphx_fast
+}  // namespace digraphx_fast

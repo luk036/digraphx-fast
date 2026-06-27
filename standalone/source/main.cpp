@@ -11,8 +11,8 @@
 auto main(int /*argc*/, const char* const* /*argv*/) -> int {
     try {
         /*
-        cxxopts::Options options("DiGraphXFast", "A C++ library for graph algorithms, with a focus on
-        directed graphs (digraphs).");
+        cxxopts::Options options("DiGraphXFast", "A C++ library for graph algorithms, with a focus
+        on directed graphs (digraphs).");
 
         options.add_options()
             ("h,help", "Print usage")
