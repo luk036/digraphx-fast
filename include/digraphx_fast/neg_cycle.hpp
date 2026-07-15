@@ -155,7 +155,8 @@ namespace digraphx_fast {
          * @brief Howard's algorithm — find negative cycles with callback
          *
          * @f[
-         *     \text{relax } d_v \gets \min(d_v, d_u + w_{uv}) \to \text{ find cycle } \to \text{ verify negativity}
+         *     \text{relax } d_v \gets \min(d_v, d_u + w_{uv}) \to \text{ find cycle } \to \text{
+         * verify negativity}
          * @f]
          *
          * @dot
@@ -209,7 +210,8 @@ namespace digraphx_fast {
          * @brief Warm-start Howard's algorithm
          *
          * @f[
-         *     \pi^{(0)}(v) \gets \pi^{(\text{prev})}(v), \quad \text{reuse predecessor policy across parametric iterations}
+         *     \pi^{(0)}(v) \gets \pi^{(\text{prev})}(v), \quad \text{reuse predecessor policy
+         * across parametric iterations}
          * @f]
          *
          * @dot
