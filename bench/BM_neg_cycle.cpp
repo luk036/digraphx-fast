@@ -1,11 +1,10 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
-#include <utility>
-#include <vector>
-
 #include <digraphx_fast/csr_graph.hpp>
 #include <digraphx_fast/neg_cycle.hpp>
+#include <utility>
+#include <vector>
 
 using namespace digraphx_fast;
 using std::pair;
@@ -30,8 +29,8 @@ static auto build_graph(size_t n_nodes, int k = 3) -> CSRGraph<double> {
 
 int main() {
     std::printf("=== digraphx-fast: NegCycleFinder (Howard, CSR) ===\n");
-    std::printf("%-12s %-10s %-6s %-8s %-12s %-8s\n",
-                "Nodes", "Edges", "Found", "Weight", "Avg(ms)", "Rel");
+    std::printf("%-12s %-10s %-6s %-8s %-12s %-8s\n", "Nodes", "Edges", "Found", "Weight",
+                "Avg(ms)", "Rel");
     const size_t sizes[] = {20000, 50000, 100000, 200000, 500000, 1000000};
     const int n_runs = 5;
     double ref_ms = 0.0;
@@ -42,11 +41,13 @@ int main() {
         vector<double> weights = g.weights;
         double total_weight = 0.0;
         bool found = false;
-        finder.howard(dist, weights,
+        finder.howard(
+            dist, weights,
             [&](const auto& cycle) {
                 found = true;
                 for (auto e : cycle) total_weight += weights[e];
-            }, 1);
+            },
+            1);
         double total_ms = 0.0;
         for (int run = 0; run < n_runs; ++run) {
             vector<double> d(g.num_nodes, 0.0);
@@ -58,8 +59,8 @@ int main() {
         }
         double avg = total_ms / n_runs;
         if (ref_ms == 0.0) ref_ms = avg;
-        std::printf("%-12zu %-10zu %-6s %-8.0f %-12.2f %-8.1f\n",
-                    n, g.num_edges, found ? "yes" : "no", total_weight, avg, avg / ref_ms);
+        std::printf("%-12zu %-10zu %-6s %-8.0f %-12.2f %-8.1f\n", n, g.num_edges,
+                    found ? "yes" : "no", total_weight, avg, avg / ref_ms);
     }
     return 0;
 }
