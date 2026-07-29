@@ -7,7 +7,7 @@ if is_mode("release") then
 end
 
 if is_plat("windows") then
-    add_cxflags("/EHsc /utf-8 /W4 /WX", { force = true })
+    add_cxflags("/EHsc /utf-8 /W4 /WX /wd4702", { force = true })
 end
 
 target("test_digraphx_fast")
