@@ -1,8 +1,8 @@
 
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-fast/workflows/MacOS/badge.svg)](https://github.com/luk036/digraphx-fast/actions)
+[![Actions Status](https://github.com/luk036/digraphx-fast/workflows/Windows/badge.svg)](https://github.com/luk036/digraphx-fast/actions)
+[![Actions Status](https://github.com/luk036/digraphx-fast/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraphx-fast/actions)
+[![Actions Status](https://github.com/luk036/digraphx-fast/workflows/Install/badge.svg)](https://github.com/luk036/digraphx-fast/actions)
 [![codecov](https://codecov.io/gh/luk036/digraphx-fast/graph/badge.svg?token=6wtXYLf7Zd)](https://codecov.io/gh/luk036/digraphx-fast)
 
 <p align="center">
