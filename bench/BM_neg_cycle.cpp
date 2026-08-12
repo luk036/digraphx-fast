@@ -1,8 +1,11 @@
-#include <chrono>
+#define ANKERL_NANOBENCH_IMPLEMENT
+#include <nanobench.h>
+
 #include <cstdint>
 #include <cstdio>
 #include <digraphx_fast/csr_graph.hpp>
 #include <digraphx_fast/neg_cycle.hpp>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -29,11 +32,9 @@ static auto build_graph(size_t n_nodes, int k = 3) -> CSRGraph<double> {
 
 int main() {
     std::printf("=== digraphx-fast: NegCycleFinder (Howard, CSR) ===\n");
-    std::printf("%-12s %-10s %-6s %-8s %-12s %-8s\n", "Nodes", "Edges", "Found", "Weight",
-                "Avg(ms)", "Rel");
     const size_t sizes[] = {20000, 50000, 100000, 200000, 500000, 1000000};
-    const int n_runs = 5;
-    double ref_ms = 0.0;
+
+    // Detect negative cycle and its total weight once per size (printed before the table)
     for (auto n : sizes) {
         auto g = build_graph(n);
         NegCycleFinder finder(g);
@@ -48,19 +49,26 @@ int main() {
                 for (auto e : cycle) total_weight += weights[e];
             },
             1);
-        double total_ms = 0.0;
-        for (int run = 0; run < n_runs; ++run) {
+        std::printf("n=%-8zu edges=%-9zu found=%-3s weight=%.0f\n", n, g.num_edges,
+                    found ? "yes" : "no", total_weight);
+    }
+
+    ankerl::nanobench::Bench bench;
+    bench.title("digraphx-fast NegCycleFinder howard (CSR) sweep")
+        .unit("op")
+        .warmup(1)
+        .epochs(3)
+        .minEpochIterations(3);
+
+    for (auto n : sizes) {
+        auto g = build_graph(n);
+        vector<double> weights = g.weights;
+        bench.run("howard n=" + std::to_string(n), [&] {
             vector<double> d(g.num_nodes, 0.0);
-            NegCycleFinder f2(g);
-            auto start = std::chrono::high_resolution_clock::now();
-            f2.howard(d, weights, [](const auto&) {}, 1);
-            auto end = std::chrono::high_resolution_clock::now();
-            total_ms += std::chrono::duration<double, std::milli>(end - start).count();
-        }
-        double avg = total_ms / n_runs;
-        if (ref_ms == 0.0) ref_ms = avg;
-        std::printf("%-12zu %-10zu %-6s %-8.0f %-12.2f %-8.1f\n", n, g.num_edges,
-                    found ? "yes" : "no", total_weight, avg, avg / ref_ms);
+            NegCycleFinder f(g);
+            auto found = f.howard(d, weights, [](const auto&) {}, 1);
+            ankerl::nanobench::doNotOptimizeAway(found);
+        });
     }
     return 0;
 }
