@@ -2,9 +2,9 @@
 #include <nanobench.h>
 
 #include <cstdint>
-#include <cstdio>
 #include <digraphx_fast/csr_graph.hpp>
 #include <digraphx_fast/neg_cycle.hpp>
+#include <fmt/format.h>
 #include <string>
 #include <utility>
 #include <vector>
@@ -31,7 +31,7 @@ static auto build_graph(size_t n_nodes, int k = 3) -> CSRGraph<double> {
 }
 
 int main() {
-    std::printf("=== digraphx-fast: NegCycleFinder (Howard, CSR) ===\n");
+    fmt::print("=== digraphx-fast: NegCycleFinder (Howard, CSR) ===\n");
     const size_t sizes[] = {20000, 50000, 100000, 200000, 500000, 1000000};
 
     // Detect negative cycle and its total weight once per size (printed before the table)
@@ -49,8 +49,8 @@ int main() {
                 for (auto e : cycle) total_weight += weights[e];
             },
             1);
-        std::printf("n=%-8zu edges=%-9zu found=%-3s weight=%.0f\n", n, g.num_edges,
-                    found ? "yes" : "no", total_weight);
+        fmt::print("n={:<8} edges={:<9} found={:<3} weight={:.0f}\n", n, g.num_edges,
+                   found ? "yes" : "no", total_weight);
     }
 
     ankerl::nanobench::Bench bench;
