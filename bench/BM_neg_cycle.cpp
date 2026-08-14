@@ -1,10 +1,10 @@
 #define ANKERL_NANOBENCH_IMPLEMENT
+#include <fmt/format.h>
 #include <nanobench.h>
 
 #include <cstdint>
 #include <digraphx_fast/csr_graph.hpp>
 #include <digraphx_fast/neg_cycle.hpp>
-#include <fmt/format.h>
 #include <string>
 #include <utility>
 #include <vector>
