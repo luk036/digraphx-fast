@@ -38,6 +38,13 @@ namespace digraphx_fast {
          * @brief Builder pattern for construction
          *
          * Accumulates edges in adjacency list, then compact to CSR.
+         *
+         * Builder pattern: separates incremental construction (`add_edge`) from
+         * the compact representation (`build`), producing a cache-friendly CSR
+         * layout.
+         *
+         * @note Design pattern: **Builder** — `add_edge` accumulates, `build`
+         *       finalizes the CSR representation.
          */
         class Builder {
             size_t _V;
