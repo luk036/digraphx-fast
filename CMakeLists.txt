@@ -83,6 +83,20 @@ if(NOT fmt_FOUND)
   )
 endif()
 
+# cxxopts < 3.3 uses uint8_t/intmax_t without including <cstdint>, which no longer compiles with
+# recent libstdc++. Resolve >= 3.3 before Py2Cpp/MyWheel so their standalone examples reuse this
+# target instead of pulling their own 3.2.1 pin.
+if(DIGRAPHXFAST_BUILD_STANDALONE AND NOT TARGET cxxopts::cxxopts)
+  find_package(cxxopts 3.3 CONFIG QUIET)
+  if(NOT cxxopts_FOUND)
+    CPMAddPackage(
+      GITHUB_REPOSITORY jarro2783/cxxopts
+      VERSION 3.3.1
+      OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL NO"
+    )
+  endif()
+endif()
+
 CPMAddPackage(
   NAME Py2Cpp
   GIT_TAG v1.6.7
@@ -176,16 +190,6 @@ packageProject(
 # ---------------------------------------------------------------------------
 
 if(DIGRAPHXFAST_BUILD_STANDALONE)
-  # cxxopts is a header-only CLI parser used by the standalone example. Prefer a consumer- or
-  # system-provided cxxopts; only fall back to CPM when no cxxopts target is available.
-  find_package(cxxopts CONFIG QUIET)
-  if(NOT cxxopts_FOUND AND NOT TARGET cxxopts::cxxopts)
-    CPMAddPackage(
-      GITHUB_REPOSITORY jarro2783/cxxopts
-      VERSION 3.2.1
-      OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL NO"
-    )
-  endif()
   # keep third-party headers out of our -Werror scope
   if(TARGET cxxopts::cxxopts)
     get_target_property(CXXOPTS_INCLUDE_DIRS cxxopts::cxxopts INTERFACE_INCLUDE_DIRECTORIES)
